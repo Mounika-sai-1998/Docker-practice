@@ -5,6 +5,6 @@ RUN pip install -r requirements.txt
 
 
 FROM firststage as final
-RUN pip install -r requirement.txt --production
+RUN pip install -r requirements.txt --production
 COPY . .
 CMD ["python" , "app.py"]
