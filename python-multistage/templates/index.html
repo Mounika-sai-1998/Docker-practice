@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Movie Booking</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f6f9;
+        }
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        h2 {
+            text-align: center;
+        }
+        select, input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+        }
+        .ticket {
+            background: #ecfdf5;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🎬 Movie Booking</h2>
+
+    <form method="POST">
+        <label>Select Movie</label>
+        <select name="movie">
+            {% for m in movies %}
+            <option value="{{ loop.index0 }}">
+                {{ m.name }} ({{ m.time }}) - ₹{{ m.price }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <label>No. of Seats</label>
+        <input type="number" name="seats" required min="1">
+
+        <button type="submit">Book Ticket</button>
+    </form>
+
+    {% if ticket %}
+    <div class="ticket">
+        <h3>🎟 Booking Confirmed</h3>
+        <p>Movie: {{ ticket.movie }}</p>
+        <p>Time: {{ ticket.time }}</p>
+        <p>Seats: {{ ticket.seats }}</p>
+        <p>Total: ₹{{ ticket.total }}</p>
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>
