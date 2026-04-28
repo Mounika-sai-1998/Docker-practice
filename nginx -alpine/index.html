@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced Bus Booking</title>
+<style>
+body {font-family: Arial; margin:0; background:#eef2f7;}
+header {background:#1f2937;color:white;padding:15px;text-align:center;font-size:22px;}
+.container {max-width:1100px;margin:20px auto;padding:20px;}
+.card {background:white;padding:20px;border-radius:12px;box-shadow:0 5px 15px rgba(0,0,0,0.1);margin-bottom:20px;}
+input,button {padding:10px;border-radius:8px;border:1px solid #ccc;margin:5px 0;width:100%;}
+button {background:#2563eb;color:white;border:none;cursor:pointer;}
+button:hover {background:#1e40af;}
+.bus {display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee;padding:10px 0;}
+.seats {display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px;}
+.seat {padding:10px;text-align:center;border-radius:6px;background:#d1d5db;cursor:pointer;}
+.seat.selected {background:#22c55e;color:white;}
+.seat.booked {background:#9ca3af;cursor:not-allowed;}
+.hidden {display:none;}
+.ticket {background:#ecfdf5;border:1px solid #10b981;padding:15px;border-radius:10px;margin-top:20px;}
+</style>
+</head>
+<body>
+<header>🚌 Advanced Bus Booking</header>
+<div class="container">
+
+<div class="card">
+<h3>Search Buses</h3>
+<input id="from" placeholder="From">
+<input id="to" placeholder="To">
+<input type="date" id="date">
+<button onclick="search()">Search</button>
+</div>
+
+<div class="card" id="busList"></div>
+
+<div class="card hidden" id="seatSection">
+<h3>Select Seats</h3>
+<div class="seats" id="seats"></div>
+<button onclick="confirmBooking()">Confirm Booking</button>
+</div>
+
+<div id="ticket" class="ticket hidden"></div>
+
+</div>
+
+<script>
+const buses=[
+{name:"Express",time:"8AM",price:500},
+{name:"Deluxe",time:"2PM",price:700},
+{name:"Night Rider",time:"10PM",price:900}
+];
+
+let selectedBus=null;
+let selectedSeats=[];
+
+function search(){
+const list=document.getElementById('busList');
+list.innerHTML='';
+buses.forEach((b,i)=>{
+list.innerHTML+=`<div class="bus">
+<div>
+<b>${b.name}</b><br>${b.time} | ₹${b.price}
+</div>
+<button onclick="selectBus(${i})">Select</button>
+</div>`;
+});
+}
+
+function selectBus(i){
+selectedBus=buses[i];
+const seatDiv=document.getElementById('seats');
+seatDiv.innerHTML='';
+selectedSeats=[];
+
+for(let i=1;i<=20;i++){
+const s=document.createElement('div');
+s.className='seat';
+s.innerText=i;
+s.onclick=()=>toggleSeat(s,i);
+seatDiv.appendChild(s);
+}
+
+document.getElementById('seatSection').classList.remove('hidden');
+}
+
+function toggleSeat(el,num){
+if(el.classList.contains('selected')){
+el.classList.remove('selected');
+selectedSeats=selectedSeats.filter(s=>s!==num);
+}else{
+el.classList.add('selected');
+selectedSeats.push(num);
+}
+}
+
+function confirmBooking(){
+if(selectedSeats.length===0){alert('Select seats');return;}
+const from=document.getElementById('from').value;
+const to=document.getElementById('to').value;
+const date=document.getElementById('date').value;
+
+const ticket=document.getElementById('ticket');
+ticket.classList.remove('hidden');
+
+ticket.innerHTML=`
+<h3>🎟 Booking Confirmed</h3>
+<p><b>Bus:</b> ${selectedBus.name}</p>
+<p><b>Route:</b> ${from} → ${to}</p>
+<p><b>Date:</b> ${date}</p>
+<p><b>Time:</b> ${selectedBus.time}</p>
+<p><b>Seats:</b> ${selectedSeats.join(', ')}</p>
+<p><b>Total:</b> ₹${selectedBus.price * selectedSeats.length}</p>
+`;
+
+window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
