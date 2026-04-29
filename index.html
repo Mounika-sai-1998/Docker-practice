@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bus Ticket Booking</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: #f1f5f9;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #2563eb;
+      color: white;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 30px auto;
+      max-width: 700px;
+      background: white;
+      padding: 20px 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    form {
+      width: 100%;
+    }
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: 600;
+      color: #333;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1em;
+    }
+    #seat-selection {
+      margin: 20px 0;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      justify-items: center;
+    }
+    .seat {
+      width: 40px;
+      height: 40px;
+      background: #93c5fd;
+      border-radius: 6px;
+      text-align: center;
+      line-height: 40px;
+      cursor: pointer;
+      user-select: none;
+      font-weight: 600;
+    }
+    .seat.selected {
+      background: #2563eb;
+      color: white;
+    }
+    .seat.booked {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+    button {
+      background: #2563eb;
+      color: white;
+      padding: 10px 15px;
+      font-size: 1em;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 20px;
+      width: 100%;
+    }
+    button:hover {
+      background: #1d4ed8;
+    }
+    .confirmation {
+      margin-top: 20px;
+      background: #e0f2fe;
+      padding: 15px;
+      border-radius: 8px;
+      color: #064e3b;
+    }
+  </style>
+</head>
+<body>
+  <header>Bus Ticket Booking</header>
+  <div class="container">
+    <form id="bookingForm">
+      <label for="from">From</label>
+      <input type="text" id="from" placeholder="Departure City" required>
+      <label for="to">To</label>
+      <input type="text" id="to" placeholder="Destination City" required>
+      <label for="date">Date of Journey</label>
+      <input type="date" id="date" required>
+      <label>Select Seat(s):</label>
+      <div id="seat-selection"></div>
+      <button type="submit">Book Ticket</button>
+    </form>
+    <div id="confirmation" class="confirmation" style="display: none;"></div>
+  </div>
+  <script>
+    const seatContainer = document.getElementById('seat-selection');
+    const confirmation = document.getElementById('confirmation');
+    const bookedSeats = [3, 7, 12];
+    // Generate seat layout
+    for (let i = 1; i <= 20; i++) {
+      const seat = document.createElement('div');
+      seat.classList.add('seat');
+      seat.textContent = i;
+      if (bookedSeats.includes(i)) seat.classList.add('booked');
+      seat.addEventListener('click', () => {
+        if (!seat.classList.contains('booked')) {
+          seat.classList.toggle('selected');
+        }
+      });
+      seatContainer.appendChild(seat);
+    }
+    // Form submission handler
+    document.getElementById('bookingForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const from = document.getElementById('from').value;
+      const to = document.getElementById('to').value;
+      const date = document.getElementById('date').value;
+      const selectedSeats = Array.from(document.querySelectorAll('.seat.selected')).map(seat => seat.textContent);
+      if (selectedSeats.length === 0) {
+        alert("Please select at least one seat.");
+        return;
+      }
+      confirmation.style.display = 'block';
+      confirmation.innerHTML = `
+        <h3>Booking Confirmed 🎉</h3>
+        <p><strong>From:</strong> ${from}</p>
+        <p><strong>To:</strong> ${to}</p>
+        <p><strong>Date:</strong> ${date}</p>
+        <p><strong>Seat(s):</strong> ${selectedSeats.join(', ')}</p>
+        <p>Thank you for booking with us!</p>
+      `;
+      // Reset form and seats
+      document.getElementById('bookingForm').reset();
+      document.querySelectorAll('.seat.selected').forEach(seat => seat.classList.remove('selected'));
+    });
+  </script>
+</body>
+</html>
