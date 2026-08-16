@@ -1,0 +1,8 @@
+apiversion: v1
+kind: ConfigMap
+metadata:
+  name: my-config
+  namespace: default
+data:
+  DB_HOST: mysqldb
+  DB_PORT: "3306"
